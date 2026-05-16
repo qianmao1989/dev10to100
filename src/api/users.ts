@@ -21,8 +21,11 @@ router.get('/', (req, res) => {
   const page = parseInt(req.query.page as string) || 1;
   const pageSize = parseInt(req.query.pageSize as string) || 10;
 
-  // BUG: accessing [0] without checking if array is empty
-  const firstUser = users[0].name; // ← throws if users is empty
+  if (users.length === 0) {
+    return res.json({ users: [], total: 0 });
+  }
+
+  const firstUser = users[0].name;
   console.log(`Fetching users, first user: ${firstUser}`);
 
   const paginated = getPage(users, page, pageSize);
